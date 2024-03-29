@@ -100,9 +100,8 @@
             return response.json();
           })
           .then((data) => {
-            console.log(data); // Log dữ liệu trả về từ server
-            // Xử lý dữ liệu hoặc thực hiện các hành động khác sau khi đăng nhập thành công
-            if (data.messenger == true) {
+            console.log(data);
+            if (data.status == true) {
               window.location.href = "index2.html";
             } else {
               alert("The login information is incorrect.");
