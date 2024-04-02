@@ -85,29 +85,29 @@
       function handleLogin() {
         var email = document.getElementById("exampleInputEmail1").value;
         var password = document.getElementById("exampleInputPassword1").value;
-        console.log(email);
-        async function postJSON(data) {
-          try {
-            const response = await fetch("http://192.168.140.85:3000/admin/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            });
-            const result = await response.json();
-            console.log("Success:", result);
-            if (result.status == true) {
-              window.location.href = "index2.html";
-            } else {
-              alert("Sai.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-          }
-        }
         const data = { email: email, password: password };
+        console.log(data);
         postJSON(data);
+      }
+      async function postJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/admin/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          console.log("Success:", result);
+          if (result.status == true) {
+            window.location.href = "index2.html";
+          } else {
+            alert("Sai.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
     </script>
     <!-- endinject -->
