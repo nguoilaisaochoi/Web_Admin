@@ -83,33 +83,31 @@
     <script src="../../assets/js/misc.js"></script>
     <script>
       function handleLogin() {
-        // Lấy giá trị của các trường input
-        var username = document.getElementById("exampleInputEmail1").value;
+        var email = document.getElementById("exampleInputEmail1").value;
         var password = document.getElementById("exampleInputPassword1").value;
-        fetch("http://192.168.1.104:3000/admin/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: username, password: password }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            if (data.status == true) {
+        console.log(email);
+        async function postJSON(data) {
+          try {
+            const response = await fetch("http://192.168.140.85:3000/admin/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+            console.log("Success:", result);
+            if (result.status == true) {
               window.location.href = "index2.html";
             } else {
-              alert("The login information is incorrect.");
+              alert("Sai.");
             }
-          })
-          .catch((error) => {
-            console.log("Error:");
-          });
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+        const data = { email: email, password: password };
+        postJSON(data);
       }
     </script>
     <!-- endinject -->
