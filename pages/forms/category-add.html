@@ -326,7 +326,6 @@
                       >
                         Submit
                       </button>
-                      <button class="btn btn-light">Cancel</button>
                     </form>
                   </div>
                 </div>
@@ -365,8 +364,12 @@
     <script>
       function addcategory() {
         var name = document.getElementById("exampleInputName").value;
-        const data = { name: name };
-        postJSON(data);
+        if (name) {
+          const data = { name: name };
+          postJSON(data);
+        } else {
+          alert("Hãy điền đẩy đủ thông tin");
+        }
       }
       async function postJSON(data) {
         try {
