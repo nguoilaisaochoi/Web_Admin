@@ -313,14 +313,6 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input check-all" />
-                              </label>
-                            </div>
-                          </th>
-                          <th>Id</th>
                           <th>Name Product</th>
                           <th>Image</th>
                           <th>Price</th>
@@ -331,15 +323,8 @@
                           <th>Actions</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="myTbody">
                         <tr>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" />
-                              </label>
-                            </div>
-                          </td>
                           <td>01</td>
                           <td>Spider Plant</td>
                           <td>None</td>
@@ -362,13 +347,6 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" />
-                              </label>
-                            </div>
-                          </td>
                           <td>02</td>
                           <td>Song of India</td>
                           <td>None</td>
@@ -463,6 +441,50 @@
           });
         });
       });
+    </script>
+    <script>
+      var tbody = document.getElementById("myTbody");
+      document.addEventListener("DOMContentLoaded", function () {
+        getJSON();
+      });
+      async function getJSON() {
+        try {
+          const response = await fetch("http://localhost:3000/product/list", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const result = await response.json();
+          console.log(result);
+          tbody.innerHTML = createTagHTML(result);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+      //tạo thẻ html tương ứng dữ liệu nhận từ api
+      function createTagHTML(data) {
+        let html = "";
+        data.map((item) => {
+          html += `
+      <tr>
+        <td>${item.name}</td>
+        <td>
+        <img src="${item.image}" alt="Hình ảnh">
+        </td>
+        <td>${item.price}đ</td>
+        <td>${item.category.name}</td>
+        <td>${item.size}</td>
+        <td>${item.origin}</td>
+        <td>${item.quantity}</td>
+        <td>
+          <a href="../forms/product-add.html" class="btn btn-gradient-success btn-sm">Edit</a>
+          <a href="#deleteModal" class="btn btn-gradient-danger btn-sm" data-toggle="modal">Delete</a>
+        </td>
+      </tr>`;
+        });
+        return html;
+      }
     </script>
   </body>
 </html>

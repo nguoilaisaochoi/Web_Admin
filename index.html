@@ -100,7 +100,7 @@
           });
           const result = await response.json();
           console.log("Success:", result);
-          if (result.status == true) {
+          if (result.data != null) {
             window.location.href = "index2.html";
           } else {
             alert("Sai.");

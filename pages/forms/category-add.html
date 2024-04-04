@@ -311,15 +311,21 @@
                   <div class="card-body">
                     <form class="forms-sample">
                       <div class="form-group">
-                        <label for="exampleInputName1">Name</label>
+                        <label for="exampleInputName">Name</label>
                         <input
                           type="text"
                           class="form-control"
-                          id="exampleInputName1"
+                          id="exampleInputName"
                           placeholder="Name"
                         />
                       </div>
-                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                      <button
+                        onclick="addcategory()"
+                        type="button"
+                        class="btn btn-gradient-primary me-2"
+                      >
+                        Submit
+                      </button>
                       <button class="btn btn-light">Cancel</button>
                     </form>
                   </div>
@@ -356,5 +362,27 @@
     <!-- Custom js for this page -->
     <script src="../../assets/js/file-upload.js"></script>
     <!-- End custom js for this page -->
+    <script>
+      function addcategory() {
+        var name = document.getElementById("exampleInputName").value;
+        const data = { name: name };
+        postJSON(data);
+      }
+      async function postJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/category/add", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          alert(result.message);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    </script>
   </body>
 </html>
