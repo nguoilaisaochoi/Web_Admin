@@ -211,7 +211,6 @@
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
                     <a class="nav-link" href="../tables/user-list.html"> List </a>
-                    <a class="nav-link" href="../forms/user-add.html"> Add </a>
                   </li>
                 </ul>
               </div>
@@ -313,21 +312,13 @@
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <th>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input check-all" />
-                              </label>
-                            </div>
-                          </th>
-                          <th>User</th>
-                          <th>First name</th>
+                          <th>Name</th>
                           <th>Email</th>
                           <th>Phone number</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="myTbody">
                         <tr>
                           <td>
                             <div class="form-check">
@@ -485,7 +476,9 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-gradient-danger btn-fw">Delete</button>
+            <button onclick="deluser()" type="button" class="btn btn-gradient-danger btn-fw">
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -510,16 +503,60 @@
     ></script>
     <!--Check All-->
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var checkAllCheckbox = document.querySelector(".check-all");
-        var checkboxes = document.querySelectorAll("td .form-check-input");
-
-        checkAllCheckbox.addEventListener("click", function () {
-          checkboxes.forEach(function (checkbox) {
-            checkbox.checked = checkAllCheckbox.checked;
-          });
+      var id = "";
+      var tbody = document.getElementById("myTbody");
+      fetch("http://localhost:3000/user/list")
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          tbody.innerHTML = createTagHTML(data.data);
+          console.log(data);
         });
-      });
+
+      function createTagHTML(data) {
+        console.log(data);
+        let html = "";
+        data.map((item) => {
+          html += `
+      <tr>
+        <td>${item.name}</td>
+        <td>${item.email}</td>
+        <td>${item.phone}</td>
+        <td>
+          <a onclick='getid("${item._id}")' href="#deleteModal" class="btn btn-gradient-danger btn-sm" data-toggle="modal">Delete</a>
+        </td>
+      </tr>`;
+        });
+        return html;
+      }
+      function getid(itemid) {
+        id = itemid;
+      }
+      function deluser() {
+        const data = {
+          id: id,
+        };
+        delJSON(data);
+        console.log(data);
+      }
+      async function delJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/user/del", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          console.log(result);
+          alert(`${result.message}`);
+          location.reload();
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
     </script>
   </body>
 </html>

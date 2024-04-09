@@ -210,7 +210,6 @@
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
                     <a class="nav-link" href="../tables/user-list.html"> List </a>
-                    <a class="nav-link" href="../forms/user-add.html"> Add </a>
                   </li>
                 </ul>
               </div>
@@ -321,7 +320,7 @@
                       </div>
                       <div class="form-group">
                         <label for="exampleSelectGender">Size</label>
-                        <select class="form-control" id="size" >
+                        <select class="form-control" id="size">
                           <option value="">Chọn kích cỡ</option>
                           <option value="Lớn">Lớn</option>
                           <option value="Trung bình">Trung bình</option>
@@ -415,10 +414,12 @@
       var quantity = "";
       var id = "";
       id = localStorage.getItem("id");
-      window.addEventListener("beforeunload", function (e) {
+
+      window.addEventListener("beforeunload", function () {
         localStorage.removeItem("id");
       });
-      console.log(`id lưu tạm ${id}`);
+
+      console.log(`id  ${id}`);
       fetch("http://localhost:3000/category/getparent")
         .then((response) => response.json())
         .then((data) => {

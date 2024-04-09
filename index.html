@@ -73,12 +73,14 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="../../assets/vendors/js/vendor.bundle.base.js"></>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/vendors/js/vendor.bundle.base.js">
+      </>
+          <!-- endinject -->
+          <!-- Plugin js for this page -->
+          <!-- End plugin js for this page -->
+          <!-- inject:js -->
+          <script src="../../assets/js/off-canvas.js">
+    </script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
     <script src="../../assets/js/misc.js"></script>
     <script>
@@ -101,9 +103,10 @@
           const result = await response.json();
           console.log("Success:", result);
           if (result.data != null) {
-            window.location.href = "index2.html";
+            localStorage.setItem("user", result.data);
+            location.href = "index2.html";
           } else {
-            alert("Sai.");
+            alert("Sai thông tin");
           }
         } catch (error) {
           console.error("Error:", error);

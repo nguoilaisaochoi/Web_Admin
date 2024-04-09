@@ -210,7 +210,6 @@
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
                     <a class="nav-link" href="../tables/user-list.html"> List </a>
-                    <a class="nav-link" href="../forms/user-add.html"> Add </a>
                   </li>
                 </ul>
               </div>
@@ -508,6 +507,13 @@
         } catch (error) {
           console.error("Error:", error);
         }
+      }
+    </script>
+    <script>
+      let checkuser = localStorage.getItem("user");
+      console.log(checkuser);
+      if (!checkuser) {
+        location.href = "../../index.html";
       }
     </script>
   </body>
