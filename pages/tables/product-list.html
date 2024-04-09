@@ -357,7 +357,11 @@
                           <td>456</td>
                           <td>
                             <a href="../forms/product-add.html"
-                              ><button type="button" class="btn btn-gradient-success btn-sm">
+                              ><button
+                                type="button"
+                                class="btn btn-gradient-success btn-sm"
+                                onclick="getinfo()"
+                              >
                                 Edit
                               </button></a
                             >
@@ -406,7 +410,9 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-gradient-danger btn-fw">Delete</button>
+            <button onclick="delproduct()" type="button" class="btn btn-gradient-danger btn-fw">
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -443,27 +449,18 @@
       });
     </script>
     <script>
+      var id = "";
       var tbody = document.getElementById("myTbody");
-      document.addEventListener("DOMContentLoaded", function () {
-        getJSON();
-      });
-      async function getJSON() {
-        try {
-          const response = await fetch("http://localhost:3000/product/list", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const result = await response.json();
-          console.log(result);
-          tbody.innerHTML = createTagHTML(result);
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      }
-      //tạo thẻ html tương ứng dữ liệu nhận từ api
+      fetch("http://localhost:3000/product/list")
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          tbody.innerHTML = createTagHTML(data);
+        });
+
       function createTagHTML(data) {
+        console.log(data);
         let html = "";
         data.map((item) => {
           html += `
@@ -478,12 +475,39 @@
         <td>${item.origin}</td>
         <td>${item.quantity}</td>
         <td>
-          <a href="../forms/product-add.html" class="btn btn-gradient-success btn-sm">Edit</a>
-          <a href="#deleteModal" class="btn btn-gradient-danger btn-sm" data-toggle="modal">Delete</a>
+          <a onclick='getidproducty("${item._id}")' href="../forms/product-add.html" class="btn btn-gradient-success btn-sm">Edit</a>
+          <a onclick='getidproducty("${item._id}")' href="#deleteModal" class="btn btn-gradient-danger btn-sm" data-toggle="modal">Delete</a>
         </td>
       </tr>`;
         });
         return html;
+      }
+      function getidproducty(itemId) {
+        id = itemId;
+        localStorage.setItem("id", id);
+        console.log(id);
+      }
+      function delproduct() {
+        const data = { id: id };
+        delJSON(data);
+        console.log(data);
+      }
+      async function delJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/product/del", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          console.log(result);
+          alert(`${result.message}`);
+          location.reload();
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
     </script>
   </body>

@@ -319,6 +319,13 @@
                           placeholder="Name"
                         />
                       </div>
+                      <div class="form-group">
+                        <label for="exampleSelectGender">Parent</label>
+                        <select id="Parent" class="form-control">
+                          <option>Likes light</option>
+                          <option>Likes shade</option>
+                        </select>
+                      </div>
                       <button
                         onclick="addcategory()"
                         type="button"
@@ -365,7 +372,7 @@
       function addcategory() {
         var name = document.getElementById("exampleInputName").value;
         if (name) {
-          const data = { name: name };
+          const data = {  name };
           postJSON(data);
         } else {
           alert("Hãy điền đẩy đủ thông tin");
@@ -386,6 +393,18 @@
           console.error("Error:", error);
         }
       }
+    </script>
+    <script>
+      var str = "";
+      fetch("http://localhost:3000/category/getparent")
+        .then((response) => response.json())
+        .then((data) => {
+          str += `<option value="">null</option>`;
+          data.map((item) => {
+            str += `<option value="${item._id}">${item.parentId}</option>`;
+          });
+          document.getElementById("Parent").innerHTML = str;
+        });
     </script>
   </body>
 </html>

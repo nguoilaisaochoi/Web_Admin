@@ -312,77 +312,62 @@
                   <div class="card-body">
                     <form class="forms-sample">
                       <div class="form-group">
-                        <label for="exampleInputName1">Name</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="exampleInputName1"
-                          placeholder="Name"
-                        />
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" id="Name" placeholder="Name" />
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPrice">Price</label>
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="exampleInputPrice"
-                          placeholder="Price"
-                        />
+                        <input type="number" class="form-control" id="Price" placeholder="Price" />
                       </div>
                       <div class="form-group">
                         <label for="exampleSelectGender">Size</label>
-                        <select class="form-control" id="exampleSelectGender">
-                          <option>Large</option>
-                          <option>Medium</option>
-                          <option>Small</option>
+                        <select class="form-control" id="size" >
+                          <option value="">Chọn kích cỡ</option>
+                          <option value="Lớn">Lớn</option>
+                          <option value="Trung bình">Trung bình</option>
+                          <option value="Nhỏ">Nhỏ</option>
                         </select>
                       </div>
                       <div class="form-group">
                         <label for="exampleSelectGender">Category</label>
-                        <select class="form-control" id="exampleSelectGender">
+                        <select
+                          class="form-control"
+                          id="Category"
+                          onchange="savecateSelectedOption()"
+                        >
                           <option>Likes light</option>
                           <option>Likes shade</option>
                         </select>
                       </div>
                       <div class="form-group">
-                        <label>Image</label>
-                        <input type="file" name="img[]" class="file-upload-default" multiple />
-                        <div class="input-group col-xs-12">
-                          <input
-                            type="text"
-                            class="form-control file-upload-info"
-                            disabled
-                            placeholder="Upload Image"
-                          />
-                          <span class="input-group-append">
-                            <button
-                              class="file-upload-browse btn btn-gradient-primary"
-                              type="button"
-                            >
-                              Upload
-                            </button>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputOrigin">Origin</label>
+                        <label for="exampleInputOrigin">Image</label>
                         <input
                           type="text"
                           class="form-control"
-                          id="exampleInputOrigin"
-                          placeholder="Origin"
+                          id="Image"
+                          placeholder="Link image"
                         />
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputOrigin">Origin</label>
+                        <input type="text" class="form-control" id="Origin" placeholder="Origin" />
                       </div>
                       <div class="form-group">
                         <label for="exampleInputCity1">Quantity</label>
                         <input
                           type="number"
                           class="form-control"
-                          id="exampleInputStatus"
+                          id="Quantity"
                           placeholder="Quantity"
                         />
                       </div>
-                      <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                      <button
+                        type="button"
+                        class="btn btn-gradient-primary me-2"
+                        onclick="checknull()"
+                      >
+                        Submit
+                      </button>
                       <button class="btn btn-light">Cancel</button>
                     </form>
                   </div>
@@ -420,8 +405,103 @@
     <script src="../../assets/js/file-upload.js"></script>
     <!-- End custom js for this page -->
     <script>
-      var name = document.getElementById("exampleInputName1").value;
-      var name = document.getElementById("exampleInputPrice").value;
+      var size = "";
+      var category = "";
+      var str = "";
+      var name = "";
+      var price = "";
+      var image = "";
+      var origin = "";
+      var quantity = "";
+      var id = "";
+      id = localStorage.getItem("id");
+      window.addEventListener("beforeunload", function (e) {
+        localStorage.removeItem("id");
+      });
+      console.log(`id lưu tạm ${id}`);
+      fetch("http://localhost:3000/category/getparent")
+        .then((response) => response.json())
+        .then((data) => {
+          str += `<option value="">Chọn loại</option>`;
+
+          data.map((item) => {
+            str += `<option value="${item._id}">${item.name}</option>`;
+          });
+          document.getElementById("Category").innerHTML = str;
+        });
+      if (id) {
+        fetch(`http://localhost:3000/product/list?_id=${id}`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("Name").value = data.name;
+            document.getElementById("size").value = data.size;
+            document.getElementById("Category").value = data.category._id;
+            document.getElementById("Price").value = data.price;
+            document.getElementById("Image").value = data.image;
+            document.getElementById("Origin").value = data.origin;
+            document.getElementById("Quantity").value = data.quantity;
+          });
+      }
+      function checknull() {
+        name = document.getElementById("Name").value;
+        price = document.getElementById("Price").value;
+        image = document.getElementById("Image").value;
+        origin = document.getElementById("Origin").value;
+        quantity = document.getElementById("Quantity").value;
+        category = document.getElementById("Category").value;
+        size = document.getElementById("size").value;
+        if (!name || !price || !size || !category || !image || !origin || !quantity) {
+          alert("Vui lòng nhập đầy đủ thông tin");
+          console.log({ name, price, image, origin, quantity, size, category });
+        } else {
+          addproduct();
+        }
+      }
+      function addproduct() {
+        if (id) {
+          const data = { id, name, price, size, category, image, origin, quantity };
+          console.log("thực hiện update");
+          updateJSON(data);
+        } else {
+          const data = { name, price, size, category, image, origin, quantity };
+          console.log("thực hiện thêm");
+          console.log(data);
+          addJSON(data);
+        }
+      }
+      async function addJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/product/add", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          alert(result.message);
+          location.reload();
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+      async function updateJSON(data) {
+        try {
+          const response = await fetch("http://localhost:3000/product/update", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          console.log(data);
+          alert(result.message);
+          location.reload();
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
     </script>
   </body>
 </html>

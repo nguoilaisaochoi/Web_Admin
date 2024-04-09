@@ -314,6 +314,7 @@
                         <tr>
                           <th>Id</th>
                           <th>Name</th>
+                          <th>ParentId</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
@@ -466,6 +467,7 @@
       <tr>
         <td>${item._id}</td>
         <td>${item.name}</td>
+         <td>${item.parentId}</td>
         <td>
           <a href="../forms/product-add.html" class="btn btn-gradient-success btn-sm">Edit</a>
           <button onclick='getidcategory("${item._id}")' href="#deleteModal" class="btn btn-gradient-danger btn-sm" data-toggle="modal">Delete</button>
